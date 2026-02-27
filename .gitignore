@@ -1,0 +1,26 @@
+# Akmega Core Git Ignore
+
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Simulation Artifacts
+tb/sim_build/
+tb/results.xml
+*.log
+trace_*.txt
+manual_trace.txt
+
+# Firmware Build Artifacts
+firmware/*.elf
+firmware/*.bin
+firmware/*.hex
+firmware/*.dis
+firmware/*.o
+
+# OpenLane ASIC Flow
+openlane/*/runs/
+
+# macOS
+.DS_Store
