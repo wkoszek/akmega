@@ -1,0 +1,14 @@
+{
+    "DESIGN_NAME": "akmega_core",
+    "VERILOG_FILES": ["../../src/akmega_core.sv"],
+    "CLOCK_PORT": "clk",
+    "CLOCK_PERIOD": 10,
+    "FP_SIZING": "absolute",
+    "DIE_AREA": "0 0 1200 1200",
+    "PL_TARGET_DENSITY": 0.35,
+    "FP_PDN_VPITCH": 100,
+    "FP_PDN_HPITCH": 100,
+    "FP_PDN_VOFFSET": 5,
+    "FP_PDN_HOFFSET": 5,
+    "SYNTH_STRATEGY": "AREA 0"
+}
