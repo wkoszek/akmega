@@ -1,205 +1,764 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akmega | The Solo Founder Operating Model for Silicon</title>
-    <style>
-        :root {
-            --bg: #0a0a0a;
-            --text: #e5e5e5;
-            --muted: #a3a3a3;
-            --accent: #3b82f6;
-            --border: #262626;
-            --font-mono: 'SF Mono', 'Fira Code', monospace;
-            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Akmega - ATmega-Compatible Core on Sky130</title>
+<meta name="description" content="A bucket-list experiment: one person, AI tools, and open-source silicon. ATmega-compatible 8-bit core taken from SystemVerilog to GDSII layout on Skywater 130nm.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: var(--font-sans);
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+:root {
+  --bg: #0b0e14;
+  --surface: #10141c;
+  --surface-raised: #161b26;
+  --border: #1e2432;
+  --border-subtle: #151a24;
+  --text: #c8cdd5;
+  --text-muted: #6b7280;
+  --text-faint: #3d4554;
+  --heading: #e8ecf1;
+  --accent-teal: #5cb8a8;
+  --accent-purple: #9b7fd4;
+  --accent-amber: #c9a04e;
+  --accent-teal-dim: #2a5e53;
+  --accent-purple-dim: #3d2d5e;
+}
 
-        header {
-            width: 100%;
-            max-width: 800px;
-            padding: 4rem 2rem 2rem 2rem;
-            border-bottom: 1px solid var(--border);
-        }
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-        .container {
-            width: 100%;
-            max-width: 800px;
-            padding: 2rem;
-            box-sizing: border-box;
-        }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
 
-        h1 {
-            font-size: 3rem;
-            font-weight: 800;
-            margin: 0;
-            letter-spacing: -0.025em;
-        }
+/* Subtle grid background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border-subtle) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
+  background-size: 60px 60px;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 0;
+}
 
-        .tagline {
-            color: var(--muted);
-            font-size: 1.25rem;
-            margin-top: 0.5rem;
-        }
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 1;
+}
 
-        .badge {
-            background: rgba(59, 130, 246, 0.1);
-            color: var(--accent);
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            display: inline-block;
-            margin-bottom: 1rem;
-        }
+/* ─── HERO ─── */
 
-        section {
-            margin-bottom: 4rem;
-        }
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: 4rem;
+  overflow: hidden;
+}
 
-        h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            border-left: 4px solid var(--accent);
-            padding-left: 1rem;
-        }
+.hero-image-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
 
-        p {
-            color: var(--muted);
-            font-size: 1.125rem;
-        }
+.hero-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  opacity: 0.45;
+  filter: saturate(0.7) contrast(1.1);
+  transition: opacity 1.2s ease;
+}
 
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-top: 2rem;
-        }
+.hero-image-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom,
+      rgba(11,14,20,0.3) 0%,
+      rgba(11,14,20,0.1) 30%,
+      rgba(11,14,20,0.6) 65%,
+      rgba(11,14,20,0.97) 90%,
+      var(--bg) 100%
+    );
+}
 
-        .card {
-            background: #171717;
-            border: 1px solid var(--border);
-            padding: 1.5rem;
-            border-radius: 8px;
-        }
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
 
-        .card h3 {
-            margin-top: 0;
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text);
-        }
+.hero-label {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--accent-teal);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.3s forwards;
+}
 
-        code {
-            font-family: var(--font-mono);
-            background: #262626;
-            padding: 0.2rem 0.4rem;
-            border-radius: 4px;
-            font-size: 0.9em;
-        }
+.hero h1 {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-weight: 400;
+  color: var(--heading);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.5s forwards;
+}
 
-        .btn {
-            background: var(--accent);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 600;
-            display: inline-block;
-            transition: opacity 0.2s;
-        }
+.hero h1 em {
+  font-style: italic;
+  color: var(--accent-teal);
+}
 
-        .btn:hover {
-            opacity: 0.9;
-        }
+.hero-sub {
+  font-size: 1.125rem;
+  font-weight: 300;
+  color: var(--text-muted);
+  max-width: 560px;
+  line-height: 1.8;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.7s forwards;
+}
 
-        footer {
-            width: 100%;
-            max-width: 800px;
-            padding: 2rem;
-            border-top: 1px solid var(--border);
-            text-align: center;
-            color: var(--muted);
-            font-size: 0.875rem;
-        }
+/* ─── SECTION SHARED ─── */
 
-        @media (max-width: 640px) {
-            .grid { grid-template-columns: 1fr; }
-            h1 { font-size: 2.5rem; }
-        }
-    </style>
+section {
+  padding: 5rem 0;
+}
+
+.section-label {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: var(--text-faint);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-label span {
+  color: var(--accent-teal);
+  margin-right: 0.75em;
+}
+
+h2 {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  font-weight: 400;
+  color: var(--heading);
+  line-height: 1.25;
+  margin-bottom: 1.5rem;
+}
+
+/* ─── THE QUESTION ─── */
+
+.question {
+  border-top: 1px solid var(--border);
+}
+
+.question-text {
+  font-size: 1.05rem;
+  font-weight: 300;
+  color: var(--text);
+  max-width: 640px;
+  line-height: 1.85;
+}
+
+.question-text strong {
+  color: var(--heading);
+  font-weight: 500;
+}
+
+.question-text + .question-text {
+  margin-top: 1.25rem;
+}
+
+blockquote {
+  margin: 2rem 0;
+  padding: 1.25rem 1.5rem;
+  border-left: 2px solid var(--accent-amber);
+  background: rgba(201, 160, 78, 0.04);
+  border-radius: 0 4px 4px 0;
+}
+
+blockquote p {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+blockquote cite {
+  display: block;
+  font-family: 'DM Sans', sans-serif;
+  font-style: normal;
+  font-size: 0.8rem;
+  color: var(--text-faint);
+  margin-top: 0.75rem;
+}
+
+/* ─── SPECS GRID ─── */
+
+.specs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 2rem;
+}
+
+.spec-cell {
+  background: var(--surface);
+  padding: 1.5rem;
+}
+
+.spec-cell .label {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.65rem;
+  font-weight: 400;
+  color: var(--text-faint);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.spec-cell .value {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 1.35rem;
+  color: var(--heading);
+}
+
+.spec-cell .value small {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 300;
+}
+
+/* ─── PIPELINE ─── */
+
+.pipeline {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin-top: 2.5rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.pipeline-step {
+  flex: 1;
+  padding: 1.5rem 1.25rem;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  position: relative;
+  transition: background 0.3s ease;
+}
+
+.pipeline-step:last-child {
+  border-right: none;
+}
+
+.pipeline-step:hover {
+  background: var(--surface-raised);
+}
+
+.pipeline-step .step-num {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.6rem;
+  color: var(--text-faint);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.75rem;
+}
+
+.pipeline-step .step-title {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 1.1rem;
+  color: var(--heading);
+  margin-bottom: 0.35rem;
+}
+
+.pipeline-step .step-detail {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.pipeline-step .step-arrow {
+  position: absolute;
+  right: -0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--accent-teal);
+  font-size: 0.8rem;
+  z-index: 2;
+}
+
+/* ─── MILESTONES ─── */
+
+.milestones-list {
+  list-style: none;
+  margin-top: 2rem;
+}
+
+.milestones-list li {
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+.milestones-list li:last-child {
+  border-bottom: none;
+}
+
+.milestone-marker {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-teal);
+  margin-top: 0.55rem;
+  justify-self: center;
+  box-shadow: 0 0 8px rgba(92,184,168,0.3);
+}
+
+.milestone-text {
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: var(--text);
+}
+
+.milestone-text strong {
+  font-weight: 500;
+  color: var(--heading);
+}
+
+/* ─── CODE BLOCK ─── */
+
+.code-block {
+  margin-top: 2rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.code-block-header {
+  background: var(--surface-raised);
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--border);
+  font-family: 'Fira Code', monospace;
+  font-size: 0.65rem;
+  color: var(--text-faint);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.code-block-header::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-teal);
+  opacity: 0.6;
+}
+
+.code-block pre {
+  background: var(--surface);
+  padding: 1.25rem 1.5rem;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.8rem;
+  line-height: 1.75;
+  color: var(--text);
+  overflow-x: auto;
+}
+
+.code-block pre .comment {
+  color: var(--text-faint);
+}
+
+.code-block pre .cmd {
+  color: var(--accent-teal);
+}
+
+/* ─── FOOTER ─── */
+
+.footer {
+  padding: 3rem 0 4rem;
+  border-top: 1px solid var(--border);
+}
+
+.footer-grid {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.footer-col h3 {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.65rem;
+  font-weight: 400;
+  color: var(--text-faint);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.footer-col p,
+.footer-col a {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  line-height: 1.8;
+  transition: color 0.2s ease;
+}
+
+.footer-col a:hover {
+  color: var(--accent-teal);
+}
+
+/* ─── ANIMATIONS ─── */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── RESPONSIVE ─── */
+
+@media (max-width: 700px) {
+  .container {
+    padding: 0 1.25rem;
+  }
+
+  .hero {
+    min-height: 90vh;
+    padding-bottom: 3rem;
+  }
+
+  section {
+    padding: 3.5rem 0;
+  }
+
+  .pipeline {
+    flex-direction: column;
+  }
+
+  .pipeline-step {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pipeline-step:last-child {
+    border-bottom: none;
+  }
+
+  .pipeline-step .step-arrow {
+    display: none;
+  }
+
+  .specs-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .milestones-list li {
+    grid-template-columns: 1.5rem 1fr;
+    gap: 0.75rem;
+  }
+
+  .footer-grid {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 420px) {
+  .specs-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
 </head>
 <body>
-    <header>
-        <div class="badge">Experimental Prototype</div>
-        <h1>Akmega ⚡</h1>
-        <div class="tagline">From C Firmware to GDSII Silicon in a Single Session.</div>
-    </header>
 
-    <div class="container">
-        <section>
-            <h2>The Thesis</h2>
-            <p>
-                The ATmega architecture is an industry titan, powering millions of devices worldwide. Yet, as my friend <strong>Mike Matera</strong> observed, it remains surprisingly opaque. Documentation is fragmented, toolchain visibility is low, and bootstrapping a custom core from scratch is often considered a high-friction endeavor.
-            </p>
-            <p>
-                Akmega was born from a simple question: Can we use AI as a force multiplier to bridge this documentation gap and ship a verified core in a matter of hours?
-            </p>
-        </section>
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="hero-image-wrap">
+    <img src="akmega_shot.png" alt="Akmega GDSII layout viewed in KLayout - routed Skywater 130nm die" loading="eager">
+  </div>
+  <div class="container hero-content">
+    <div class="hero-label">SystemVerilog &middot; Sky130 &middot; Open Source</div>
+    <h1>Akmega</h1>
+    <p class="hero-sub">
+      An ATmega-compatible 8-bit core taken from RTL to physical layout on Skywater 130nm.
+      A bucket-list project to see how far one person and open-source tools can get.
+    </p>
+  </div>
+</section>
 
-        <section>
-            <h2>Insights from the Arena</h2>
-            <p>
-                In a previous attempt to build a larger RISC-V core, I hit a wall at physical placement. The complexity of modern ISA implementation often makes automated P&R (Place and Route) fail for solo developers without enterprise-grade tools.
-            </p>
-            <p>
-                Akmega represents a successful course correction. By focusing on a lean, 100% compatible 8-bit core and integrating modern <strong>AXI4-Lite</strong> buses, I achieved a clean physical layout on the <strong>Skywater 130nm</strong> process. It's a proof of concept for a new operating model: highly technical founders shipping verified silicon using AI to handle the cognitive load of architectural mapping.
-            </p>
-        </section>
+<!-- ─── THE QUESTION ─── -->
+<section class="question">
+  <div class="container reveal">
+    <div class="section-label"><span>01</span> Background</div>
+    <h2>The question was simple enough</h2>
+    <p class="question-text">
+      Could I take a complete microcontroller core from SystemVerilog all the way to a finished
+      GDSII layout using only open-source tools? I'd tried something similar before with a RISC-V
+      design, but that project <strong>failed at the placement stage</strong>&mdash;too much
+      physical complexity for the automated flow.
+    </p>
+    <p class="question-text">
+      So I scaled down. The ATmega architecture is one of the most widely-deployed 8-bit ISAs
+      in the world, but as my friend <strong>Mike Matera</strong> pointed out, it's surprisingly
+      poorly documented from an ISA perspective compared to modern standards.
+      That gap made it an interesting target.
+    </p>
+    <blockquote>
+      <p>The ATmega toolchain visibility is often lacking, making it significantly tougher
+        to bootstrap a custom core from scratch.</p>
+      <cite>&mdash; Mike Matera, on the ATmega documentation gap</cite>
+    </blockquote>
+    <p class="question-text">
+      The entire core was developed through an interactive session with an LLM&mdash;an exploration
+      of what's currently possible at the boundary of AI-assisted hardware engineering.
+    </p>
+  </div>
+</section>
 
-        <section>
-            <h2>The Specification</h2>
-            <div class="grid">
-                <div class="card">
-                    <h3>Compatibility</h3>
-                    <p>Verified against <code>avr-gcc</code> generated binaries. Supports word arithmetic and hardware multiplication.</p>
-                </div>
-                <div class="card">
-                    <h3>Buses</h3>
-                    <p>Dual <strong>AXI4-Lite</strong> master interfaces for instruction fetch and data memory. SoC-ready by design.</p>
-                </div>
-                <div class="card">
-                    <h3>Process</h3>
-                    <p>Synthesized and routed for <strong>Sky130</strong> using OpenLane. Zero DRC/LVS violations in GDSII.</p>
-                </div>
-                <div class="card">
-                    <h3>Verification</h3>
-                    <p>Bit-perfect matching between RTL simulation and a Python Functional Golden Model.</p>
-                </div>
-            </div>
-        </section>
-
-        <section style="text-align: center;">
-            <a href="https://github.com/wkoszek/akmega" class="btn">View Source on GitHub</a>
-        </section>
+<!-- ─── TECHNICAL OVERVIEW ─── -->
+<section>
+  <div class="container reveal">
+    <div class="section-label"><span>02</span> Specifications</div>
+    <h2>What's inside</h2>
+    <div class="specs-grid">
+      <div class="spec-cell">
+        <div class="label">Architecture</div>
+        <div class="value">8-bit AVR</div>
+      </div>
+      <div class="spec-cell">
+        <div class="label">ISA Compat</div>
+        <div class="value">ATmega328P</div>
+      </div>
+      <div class="spec-cell">
+        <div class="label">Bus Interface</div>
+        <div class="value">AXI4-Lite</div>
+      </div>
+      <div class="spec-cell">
+        <div class="label">Process</div>
+        <div class="value">Sky130 <small>130nm</small></div>
+      </div>
+      <div class="spec-cell">
+        <div class="label">RTL</div>
+        <div class="value">SystemVerilog</div>
+      </div>
+      <div class="spec-cell">
+        <div class="label">Core Size</div>
+        <div class="value">~209 <small>lines</small></div>
+      </div>
+      <div class="spec-cell">
+        <div class="label">Verification</div>
+        <div class="value">Python <small>golden model</small></div>
+      </div>
+      <div class="spec-cell">
+        <div class="label">ASIC Flow</div>
+        <div class="value">OpenLane</div>
+      </div>
     </div>
+  </div>
+</section>
 
-    <footer>
-        &copy; 2026 Akmega Project. Built by Adam Koszek. Inspired by Mike Matera.
-    </footer>
+<!-- ─── THE PIPELINE ─── -->
+<section>
+  <div class="container reveal">
+    <div class="section-label"><span>03</span> Pipeline</div>
+    <h2>C firmware to silicon layout</h2>
+    <p class="question-text" style="margin-bottom: 0">
+      The full flow compiles a C program (a Fibonacci sequence test), simulates the RTL
+      against a behavioral golden model, and then pushes the design through synthesis, placement,
+      routing, and signoff.
+    </p>
+    <div class="pipeline">
+      <div class="pipeline-step">
+        <div class="step-num">01</div>
+        <div class="step-title">Compile</div>
+        <div class="step-detail">C &rarr; AVR binary<br>avr-gcc &middot; atmega328p</div>
+        <span class="step-arrow">&rarr;</span>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num">02</div>
+        <div class="step-title">Simulate</div>
+        <div class="step-detail">RTL execution<br>cocotb &middot; Icarus Verilog</div>
+        <span class="step-arrow">&rarr;</span>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num">03</div>
+        <div class="step-title">Verify</div>
+        <div class="step-detail">Golden model diff<br>Python &middot; bit-perfect</div>
+        <span class="step-arrow">&rarr;</span>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num">04</div>
+        <div class="step-title">Layout</div>
+        <div class="step-detail">RTL &rarr; GDSII<br>OpenLane &middot; Sky130</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── WHAT WORKED ─── -->
+<section>
+  <div class="container reveal">
+    <div class="section-label"><span>04</span> Results</div>
+    <h2>What came out of it</h2>
+    <ul class="milestones-list">
+      <li>
+        <div class="milestone-marker"></div>
+        <div class="milestone-text">
+          <strong>Simulation works.</strong> The core runs real C firmware compiled with
+          avr-gcc. A Fibonacci program executes correctly and matches the golden model
+          bit-for-bit at every cycle.
+        </div>
+      </li>
+      <li>
+        <div class="milestone-marker"></div>
+        <div class="milestone-text">
+          <strong>The layout completed.</strong> Unlike the earlier RISC-V attempt, this design
+          made it through the entire OpenLane flow&mdash;synthesis, placement, CTS, routing,
+          and signoff&mdash;to produce a valid GDSII on the Skywater 130nm process.
+        </div>
+      </li>
+      <li>
+        <div class="milestone-marker"></div>
+        <div class="milestone-text">
+          <strong>AXI4-Lite buses.</strong> Instead of the custom memory interface found in
+          standard AVR cores, Akmega uses standard AXI4-Lite for both instruction fetch
+          and data memory. This makes it straightforward to integrate into a larger SoC.
+        </div>
+      </li>
+      <li>
+        <div class="milestone-marker"></div>
+        <div class="milestone-text">
+          <strong>The whole thing is ~209 lines of SystemVerilog.</strong> Not a testament
+          to cleverness&mdash;more a reflection of how much the ATmega ISA packs into
+          a small surface area.
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ─── TRY IT ─── -->
+<section>
+  <div class="container reveal">
+    <div class="section-label"><span>05</span> Usage</div>
+    <h2>Running it yourself</h2>
+    <div class="code-block">
+      <div class="code-block-header">Terminal</div>
+      <pre><span class="comment"># Compile firmware, simulate RTL, verify against golden model</span>
+<span class="cmd">$</span> make verify
+
+<span class="comment"># Run the full ASIC flow (requires Docker + OpenLane)</span>
+<span class="cmd">$</span> make gds</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h3>Project</h3>
+        <p>Akmega is open source.<br>
+          <a href="https://github.com/wkoszek/akmega">github.com/wkoszek/akmega</a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <h3>Acknowledgments</h3>
+        <p>Mike Matera &middot; OpenLane &middot; Skywater PDK</p>
+      </div>
+      <div class="footer-col">
+        <h3>Author</h3>
+        <p><a href="https://koszek.com">Adam Koszek</a></p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Scroll-triggered reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
 </body>
 </html>
