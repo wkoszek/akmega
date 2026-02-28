@@ -87,7 +87,7 @@ body::before {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 30%;
+  object-position: 40% 45%;
   opacity: 0.45;
   filter: saturate(0.7) contrast(1.1);
   transition: opacity 1.2s ease;
@@ -149,6 +149,37 @@ body::before {
   line-height: 1.8;
   opacity: 0;
   animation: fadeUp 0.8s ease 0.7s forwards;
+}
+
+.hero-title-link {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.hero-title-link:hover {
+  color: var(--accent-teal);
+}
+
+.hero-gh-link {
+  display: inline-block;
+  margin-top: 1.5rem;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.8rem;
+  color: var(--accent-teal);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  padding: 0.5rem 1.25rem;
+  border: 1px solid var(--accent-teal-dim);
+  border-radius: 3px;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.9s forwards;
+}
+
+.hero-gh-link:hover {
+  background: rgba(92,184,168,0.08);
+  border-color: var(--accent-teal);
 }
 
 /* ─── SECTION SHARED ─── */
@@ -549,11 +580,12 @@ blockquote cite {
   </div>
   <div class="container hero-content">
     <div class="hero-label">SystemVerilog &middot; Sky130 &middot; Open Source</div>
-    <h1>Akmega</h1>
+    <h1><a href="https://github.com/wkoszek/akmega" class="hero-title-link">Akmega</a></h1>
     <p class="hero-sub">
       An ATmega-compatible 8-bit core taken from RTL to physical layout on Skywater 130nm.
       A bucket-list project to see how far one person and open-source tools can get.
     </p>
+    <a href="https://github.com/wkoszek/akmega" class="hero-gh-link">View on GitHub &rarr;</a>
   </div>
 </section>
 
