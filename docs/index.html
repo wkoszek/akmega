@@ -31,6 +31,7 @@
 html {
   font-size: 16px;
   scroll-behavior: smooth;
+  scroll-padding-top: 3.5rem;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -63,6 +64,65 @@ body::before {
   padding: 0 2rem;
   position: relative;
   z-index: 1;
+}
+
+/* ─── TOP BAR ─── */
+
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 2rem;
+  background: rgba(11,14,20,0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(30,36,50,0.5);
+  transition: background 0.3s ease;
+}
+
+.topbar-name {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 1.1rem;
+  color: var(--heading);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+
+.topbar-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.topbar-links a {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  letter-spacing: 0.06em;
+  transition: color 0.2s ease;
+}
+
+.topbar-links a:hover {
+  color: var(--accent-teal);
+}
+
+.topbar-links .gh-btn {
+  color: var(--accent-teal);
+  padding: 0.35rem 0.85rem;
+  border: 1px solid var(--accent-teal-dim);
+  border-radius: 3px;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.topbar-links .gh-btn:hover {
+  background: rgba(92,184,168,0.1);
+  border-color: var(--accent-teal);
 }
 
 /* ─── HERO ─── */
@@ -573,6 +633,17 @@ blockquote cite {
 </head>
 <body>
 
+<!-- ─── TOP BAR ─── -->
+<nav class="topbar">
+  <a href="https://github.com/wkoszek/akmega" class="topbar-name">Akmega</a>
+  <div class="topbar-links">
+    <a href="#specs">Specs</a>
+    <a href="#pipeline">Pipeline</a>
+    <a href="#results">Results</a>
+    <a href="https://github.com/wkoszek/akmega" class="gh-btn">GitHub &rarr;</a>
+  </div>
+</nav>
+
 <!-- ─── HERO ─── -->
 <section class="hero">
   <div class="hero-image-wrap">
@@ -619,7 +690,7 @@ blockquote cite {
 </section>
 
 <!-- ─── TECHNICAL OVERVIEW ─── -->
-<section>
+<section id="specs">
   <div class="container reveal">
     <div class="section-label"><span>02</span> Specifications</div>
     <h2>What's inside</h2>
@@ -661,7 +732,7 @@ blockquote cite {
 </section>
 
 <!-- ─── THE PIPELINE ─── -->
-<section>
+<section id="pipeline">
   <div class="container reveal">
     <div class="section-label"><span>03</span> Pipeline</div>
     <h2>C firmware to silicon layout</h2>
@@ -699,7 +770,7 @@ blockquote cite {
 </section>
 
 <!-- ─── WHAT WORKED ─── -->
-<section>
+<section id="results">
   <div class="container reveal">
     <div class="section-label"><span>04</span> Results</div>
     <h2>What came out of it</h2>
