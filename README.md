@@ -1,5 +1,7 @@
 # Akmega ⚡
 
+**[Project page](https://wkoszek.github.io/akmega/)**
+
 **Akmega** is a 100% ATmega-compatible 8-bit microcontroller core implemented in pure SystemVerilog, featuring modern AXI4-Lite instruction and data buses.
 
 This project is an exploration of the boundaries of AI-assisted hardware engineering, developed entirely through an interactive session with an LLM.
