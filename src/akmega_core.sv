@@ -442,7 +442,7 @@ module akmega_core (
                             sreg[1] <= (mulsu_res == 16'h0);
                             pc <= pc + 16'h2; state <= STATE_FETCH_REQ;
                         end
-                        16'b000000111???0???: begin // FMUL - Fractional Unsigned Multiply
+                        16'b000000110???1???: begin // FMUL - Fractional Unsigned Multiply
                             logic [15:0] fmul_res;
                             logic [4:0] fmul_d, fmul_r;
                             fmul_d = {2'b10, inst_reg[6:4]}; // R16-R23
@@ -453,7 +453,7 @@ module akmega_core (
                             sreg[1] <= (fmul_res == 16'h0);
                             pc <= pc + 16'h2; state <= STATE_FETCH_REQ;
                         end
-                        16'b0000001110??0???: begin // FMULS - Fractional Signed Multiply
+                        16'b000000111???0???: begin // FMULS - Fractional Signed Multiply
                             logic signed [15:0] fmuls_tmp;
                             logic [15:0] fmuls_res;
                             logic [4:0] fmuls_d, fmuls_r;
@@ -466,7 +466,7 @@ module akmega_core (
                             sreg[1] <= (fmuls_res == 16'h0);
                             pc <= pc + 16'h2; state <= STATE_FETCH_REQ;
                         end
-                        16'b0000001110??1???: begin // FMULSU - Fractional Signed x Unsigned
+                        16'b000000111???1???: begin // FMULSU - Fractional Signed x Unsigned
                             logic signed [15:0] fmulsu_tmp;
                             logic [15:0] fmulsu_res;
                             logic [4:0] fmulsu_d, fmulsu_r;
@@ -655,7 +655,7 @@ module akmega_core (
                             pc <= pc + 16'h2;
                             state <= STATE_MEM_REQ;
                         end
-                        16'b1001010?????0100: begin // LPM Rd, Z (also handles LPM R0,Z via d_idx)
+                        16'b1001000?????0100: begin // LPM Rd, Z (also handles LPM R0,Z via d_idx)
                             indirect_reg <= d_idx;
                             indirect_ptr <= {gpr[31], gpr[30]};
                             indirect_post_inc <= 1'b0;
@@ -669,7 +669,7 @@ module akmega_core (
                             pc <= pc + 16'h2;
                             state <= STATE_LPM_REQ;
                         end
-                        16'b10?0??0?????1???: begin // LDD Y+q / STD Y+q
+                        16'b10?0????????1???: begin // LDD Y+q / STD Y+q
                             logic [5:0] ldd_q_y;
                             logic [15:0] ldd_y_addr;
                             ldd_q_y = {inst_reg[13], inst_reg[11:10], inst_reg[2:0]};
@@ -688,7 +688,7 @@ module akmega_core (
                             end
                             pc <= pc + 16'h2;
                         end
-                        16'b10?0??0?????0???: begin // LDD Z+q / STD Z+q
+                        16'b10?0????????0???: begin // LDD Z+q / STD Z+q
                             logic [5:0] ldd_q_z;
                             logic [15:0] ldd_z_addr;
                             ldd_q_z = {inst_reg[13], inst_reg[11:10], inst_reg[2:0]};

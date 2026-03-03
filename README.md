@@ -26,16 +26,42 @@ Akmega represents several personal and technical "firsts":
 
 ## Quick Start
 
-### 1. Verification
+### 1. Install Tooling
+```bash
+brew install uv avr-gcc simavr icarus-verilog
+```
+
+### 2. Install Python Dependencies (uv)
+```bash
+make setup
+```
+
+This creates/updates `./venv` and installs the cocotb-based test stack from `requirements.txt`.
+
+### 3. Verification (Fibonacci Reference)
 To compile the firmware, run the RTL simulation, and verify behavior against the golden model:
 ```bash
 make verify
 ```
 
-### 2. Physical Design
+### 4. Verification (Full Implemented ISA Coverage)
+To run a directed ISA program, cross-check RTL vs simavr, and enforce opcode-class coverage:
+```bash
+make verify_isa
+```
+
+This target validates trace equivalence and checks coverage for all implemented decode classes.
+
+### 5. Physical Design
 To run the full ASIC flow and generate the GDSII layout:
 ```bash
 make gds
+```
+
+### 6. Cleanup
+To remove generated simulation/build artifacts:
+```bash
+make clean
 ```
 
 ## Acknowledgments
